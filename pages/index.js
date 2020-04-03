@@ -50,7 +50,10 @@ const Index = withRouter(({ router, artists }) => {
         <div className="mt-4 grid grid-cols-3 gap-8">
           {artists.map(artist => (
             <div key={artist.id} className="relative pb-full">
-              <Link href={`/artists/${artist.id}`}>
+              <Link
+                href="/artists/[id]"
+                as={`/artists/${encodeURIComponent(artist.id)}`}
+              >
                 <a className="group block absolute inset-0">
                   <img
                     className="h-full w-full object-cover"

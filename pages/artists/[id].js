@@ -56,8 +56,11 @@ const Index = withRouter(({ router, artist, albums }) => {
             {albums.map(album => (
               <div key={albums.id} class="relative pb-full">
                 <Link
-                  href={`/artists/${artist.id}/?showAlbum=${album.id}`}
-                  as={`/albums/${album.id}`}
+                  href={{
+                    pathname: '/artists/[id]',
+                    query: { id: artist.id, showAlbum: album.id },
+                  }}
+                  as={`/albums/${encodeURIComponent(album.id)}`}
                   scroll={false}
                   shallow
                 >
