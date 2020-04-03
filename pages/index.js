@@ -8,9 +8,7 @@ function Modal({ children }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
       <div className="absolute inset-0 bg-black opacity-25" onClick={() => Router.back()}></div>
-      <div className="relative w-full max-w-2xl bg-white p-8">
-        { children }
-      </div>
+      <div className="relative w-full max-w-2xl bg-white p-8">{children}</div>
     </div>
   )
 }
@@ -25,15 +23,13 @@ function AlbumModal({ album }) {
             by <span className="text-gray-700">{album.artist}</span>
           </div>
           <ol className="mt-4 list-decimal text-sm text-gray-800 pl-4">
-            {
-              album.tracks.map(track => (
-                <li>
-                  <div className="flex justify-between">
-                    {track.title} <span className="text-gray-600">{track.length}</span>
-                  </div>
-                </li>
-              ))
-            }
+            {album.tracks.map(track => (
+              <li>
+                <div className="flex justify-between">
+                  {track.title} <span className="text-gray-600">{track.length}</span>
+                </div>
+              </li>
+            ))}
           </ol>
         </div>
         <div className="w-1/2 px-4">
@@ -44,29 +40,36 @@ function AlbumModal({ album }) {
   )
 }
 
-const Index = withRouter(({ router, albums }) => {
-
+const Index = withRouter(({ router, artists }) => {
   return (
     <Layout>
       <div className="p-8">
-        <h1 className="text-center text-3xl uppercase tracking-tighter font-bold text-gray-900">💀 Headbangstagram 💀</h1>
-        <div className="flex flex-wrap -mx-2 -mt-2">
-          {
-            albums.map(album => (
-              <div key={album.id} className="w-1/3 px-2 mt-4">
-                <Link href={`/?showAlbum=${album.id}`} as={`/albums/${album.id}`} scroll={false} shallow>
-                  <a>
-                    <img src={`/static${album.artwork_url}`} alt={`${album.artist} - ${album.title}`}/>
-                  </a>
-                </Link>
-              </div>
-            ))
-          }
+        <h1 className="text-center text-3xl uppercase tracking-tighter font-bold text-gray-900">
+          💀 Headbangstagram 💀
+        </h1>
+        <div className="mt-4 grid grid-cols-3 gap-8">
+          {artists.map(artist => (
+            <div key={artist.id} className="relative pb-full">
+              <Link href={`/artists/${artist.id}`}>
+                <a className="group block absolute inset-0">
+                  <img
+                    className="h-full w-full object-cover"
+                    src={`/static${artist.image_url}`}
+                    alt={artist.name}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="absolute inset-0 bg-black opacity-50"></div>
+                    <div className="relative text-white font-semibold text-lg">{artist.name}</div>
+                  </div>
+                </a>
+              </Link>
+            </div>
+          ))}
         </div>
       </div>
-      {router.query.showAlbum &&
+      {router.query.showAlbum && (
         <AlbumModal album={albums.find(album => album.id == router.query.showAlbum)} />
-      }
+      )}
     </Layout>
   )
 })
@@ -79,10 +82,10 @@ Index.getInitialProps = async ({ req, query }) => {
   }
 
   const baseUrl = req ? getBaseUrl(req) : '/api'
-  const albums = await fetch(`${baseUrl}/albums`).then(r => r.json())
+  const artists = await fetch(`${baseUrl}/artists`).then(r => r.json())
 
   return {
-    albums,
+    artists,
   }
 }
 

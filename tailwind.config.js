@@ -1,7 +1,9 @@
 module.exports = {
   theme: {
-    extend: {}
+    extend: {},
   },
-  variants: {},
-  plugins: []
+  variants: {
+    opacity: ['responsive', 'group-hover', 'group-focus', 'hover', 'focus'],
+  },
+  plugins: [require('@tailwindcss/ui')],
 }
